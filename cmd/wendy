@@ -1,0 +1,35 @@
+import argparse
+import os
+import sys
+sys.path.insert(0, os.path.abspath('.'))
+from wendy.utils import isNonBlankString
+
+p = argparse.ArgumentParser(prog="WENDY")
+p.add_argument('--gen-repo', '-r', action='store_true',
+               help="Auto-gen repository files")
+p.add_argument('--repo-name', '-n', help="Repo name")
+args = p.parse_args()
+
+if args.gen_repo and isNonBlankString(args.repo_name):
+    f = open(os.path.abspath('templates/databases/reposistory.tmpl'))
+    tmpl = f.read()
+    f.close()
+    repo_name = args.repo_name.lower()
+    repo_name_capital = repo_name[0].upper() + repo_name[1:]
+    try:
+        from wendy.models import *
+        eval(repo_name_capital)
+    except NameError as ne:
+        print(
+            f"Class {repo_name_capital} cannot be found. Plz update your entities first!")
+        raise
+    repo_path = f"wendy/repositories/{repo_name}.py"
+    fw = open(repo_path, 'w')
+    fw.write(tmpl.format_map(
+        {
+            'model': repo_name,
+            'Model': repo_name_capital
+        }
+    ))
+    fw.close()
+    print(f"Repo file for {repo_name_capital} class was generated successfully. You can file the repo file at wendy/repositories/{repo_name}.py")
