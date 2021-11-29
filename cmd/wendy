@@ -1,14 +1,46 @@
+from aerich import Command, DowngradeError
+import asyncio
 import argparse
 import os
 import sys
+from os import environ as env
 sys.path.insert(0, os.path.abspath('.'))
 from wendy.utils import isNonBlankString
+
 
 p = argparse.ArgumentParser(prog="WENDY")
 p.add_argument('--gen-repo', '-r', action='store_true',
                help="Auto-gen repository files")
 p.add_argument('--repo-name', '-n', help="Repo name")
+p.add_argument('--migrate', '-m', action='store_true',
+               help="Performing migrations")
 args = p.parse_args()
+
+TORTOISE_ORM = {
+    "connections": {
+        "default": env.get('MYSQL_URL', "mysql://root@127.0.0.1:3306/wendy"),
+    },
+    "apps": {
+        "models": {
+            'models': [
+                'aerich.models',
+                'wendy.models'
+            ],
+            "default_connection": "default",
+        },
+    },
+}
+
+command = Command(
+    tortoise_config=TORTOISE_ORM,
+    app='models',
+    location='databases/migrations'
+)
+
+
+async def migrate():
+    await command.init()
+    await command.migrate(name="update")
 
 if args.gen_repo and isNonBlankString(args.repo_name):
     f = open(os.path.abspath('templates/databases/reposistory.tmpl'))
@@ -32,4 +64,10 @@ if args.gen_repo and isNonBlankString(args.repo_name):
         }
     ))
     fw.close()
-    print(f"Repo file for {repo_name_capital} class was generated successfully. You can file the repo file at wendy/repositories/{repo_name}.py")
+    print(f"Repo file for {repo_name_capital} class was generated successfully. You can find the repo file at wendy/repositories/{repo_name}.py")
+
+
+if args.migrate:
+    loop = asyncio.get_event_loop()
+    loop.run_until_complete(asyncio.wait([migrate()]))
+    loop.close()
