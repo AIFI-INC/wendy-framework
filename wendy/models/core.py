@@ -10,8 +10,10 @@ __all__ = [
 
 class Address(Model):
     id = fields.BigIntField(pk=True)
-    longtitude = fields.FloatField(description='the longtitude of the place', null=True)
-    latitude = fields.FloatField(description='the latitude of the place', null=True)
+    longtitude = fields.FloatField(
+        description='the longtitude of the place', null=True)
+    latitude = fields.FloatField(
+        description='the latitude of the place', null=True)
     country_code = fields.IntField(null=False, default=81)
     post_code = fields.CharField(max_length=50, null=True)
     city = fields.CharField(max_length=255)
@@ -44,7 +46,7 @@ class Building(Model):
 
     class Meta:
         table = 'buildings'
-        indexes = (('name'),) # should change to FullTextIndex later
+        indexes = (('name'),)  # should change to FullTextIndex later
 
 
 class Room(Model):
