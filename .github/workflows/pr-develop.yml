@@ -9,9 +9,27 @@ on:
       - release/**
 
 jobs:
+  lint:
+    name: Run flake8 in commits
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: true
+      matrix:
+        python-version: ['3.8']
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2.4.0
+      - name: Install dependencies
+        run: |
+          pip install flake8
+      - name: Linting
+        run: |
+          flake8 . --ignore E501,F401,F403
+    
   pr-develop:
     name: Automatically create/update PR
     runs-on: ubuntu-latest
+    needs: [lint]
     steps:
     - uses: actions/checkout@v2.4.0
     - name: pull-request
