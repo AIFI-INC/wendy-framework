@@ -4,3 +4,8 @@ echo -e "Checking your code before committing ..."
 
 pip install flake8
 flake8 . --ignore E501,F401,F403
+
+echo -e "Auto-formatting your code ..."
+
+pip install autopep8
+autopep8 -r --in-place .
