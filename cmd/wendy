@@ -2,6 +2,8 @@ from aerich import Command, DowngradeError
 import asyncio
 import argparse
 import inflect
+import IPython
+
 import os
 import sys
 from os import environ as env
@@ -86,7 +88,7 @@ if args.action.lower() == "generate":
             }
         ))
         fw.close()
-        print(f"Repo file for {entity_name_capital} class was generated successfully. You can find the repo file at wendy/repositories/{entity_name}.py")
+        print(f"Entity file for {entity_name_capital} class was generated successfully. You can find the entity file at wendy/models/{entity_name}.py")
         print("Patching wendy/models/__init__.py ...")
         fw = open("wendy/models/__init__.py", "a+")
         fw.write(f"\nfrom .{entity_name} import *\n")
@@ -101,4 +103,4 @@ if args.action.lower() == "migrate":
 
 
 if args.action.lower() == "dbshell":
-    pass
+    IPython.embed(header="Starting a dbshell for WENDY ...\nType 'exit' to finish anytime you want.")
