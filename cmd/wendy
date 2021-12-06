@@ -85,6 +85,10 @@ if args.action.lower() == "generate":
         ))
         fw.close()
         print(f"Repo file for {repo_name_capital} class was generated successfully. You can find the repo file at wendy/repositories/{repo_name}.py")
+        print("Patching wendy/repositories/__init__.py ...")
+        fw = open("wendy/repositories/__init__.py", "a+")
+        fw.write(f"\nfrom .{repo_name} import *\n")
+        fw.close()
     elif args.component.lower() == "entity" and isNonBlankString(args.entity):
         f = open(os.path.abspath('templates/databases/model.tmpl'))
         tmpl = f.read()
