@@ -36,7 +36,8 @@ ALLOWED_ACTIONS = [
 
 ALLOWED_COMPONENTS = [
     'repository',
-    'entity'
+    'entity',
+    'seed'
 ]
 
 action = args.action
@@ -110,7 +111,25 @@ if args.action.lower() == "generate":
         fw = open("wendy/models/__init__.py", "a+")
         fw.write(f"\nfrom .{entity_name} import *\n")
         fw.close()
-
+    elif args.component.lower() == "seed" and isNonBlankString(args.entity):
+        f = open(os.path.abspath('templates/databases/seed.tmpl'))
+        tmpl = f.read()
+        f.close()
+        entity_name = args.entity.lower()
+        entity_name_capital = entity_name[0].upper() + entity_name[1:]
+        seed_path = f"wendy/models/seeds/{entity_name}.py"
+        fw = open(seed_path, 'w')
+        fw.write(tmpl.format_map(
+            {
+                'Model': entity_name_capital
+            }
+        ))
+        fw.close()
+        print(f"Seed file for {entity_name_capital} class was generated successfully. You can find the entity file at wendy/models/seeds/{entity_name}.py")
+        print("Patching wendy/models/seeds/__init__.py ...")
+        fw = open("wendy/models/seeds/__init__.py", "a+")
+        fw.write(f"\nfrom .{entity_name} import *\n")
+        fw.close()
 
 elif args.action.lower() == "migrate":
     loop = asyncio.get_event_loop()
