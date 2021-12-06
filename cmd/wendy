@@ -16,6 +16,7 @@ p.add_argument("action", help="The action you want to invoke.", type=str)
 p.add_argument("--component", '-c', type=str, help="Name of the target component")
 p.add_argument('--repository', '-r', help="Repo name")
 p.add_argument('--entity', '-e', help="Name of the entity")
+p.add_argument('--not-delete-when-downgrade', action='store_true', help="whether not to delete the migration file when downgrade")
 args = p.parse_args()
 
 command = Command(
@@ -27,6 +28,8 @@ command = Command(
 ALLOWED_ACTIONS = [
     'generate',
     'migrate',
+    'migrate:up',
+    'migrate:down',
     'dbshell',
     'run'
 ]
@@ -42,6 +45,16 @@ action = args.action
 async def migrate():
     await command.init()
     await command.migrate(name="update")
+    
+async def up():
+    await migrate()
+    migrations = await command.upgrade()
+    print(f"Applied the following versions: {migrations}")
+
+async def down():
+    await command.init()
+    versions = os.listdir('databases/migrations/models')
+    await command.downgrade(version=len(versions)-1, delete=not args.not_delete_when_downgrade)
 
 if args.action.lower() not in ALLOWED_ACTIONS:
     raise ValueError(f"action must be one of the following values: [{', '.join(ALLOWED_ACTIONS)}]")
@@ -101,6 +114,17 @@ elif args.action.lower() == "migrate":
     loop.close()
     print("Migrate done")
 
+elif args.action.lower() == "migrate:up":
+    loop = asyncio.get_event_loop()
+    loop.run_until_complete(asyncio.wait([up()]))
+    loop.close()
+    print("Migrate done")
+
+elif args.action.lower() == "migrate:down":
+    loop = asyncio.get_event_loop()
+    loop.run_until_complete(asyncio.wait([down()]))
+    loop.close()
+    print("Migrate done")
 
 elif args.action.lower() == "dbshell":
     env['PYTHONPATH'] = os.path.abspath(os.curdir)
