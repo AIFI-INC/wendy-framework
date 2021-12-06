@@ -95,16 +95,16 @@ if args.action.lower() == "generate":
         fw.close()
 
 
-if args.action.lower() == "migrate":
+elif args.action.lower() == "migrate":
     loop = asyncio.get_event_loop()
     loop.run_until_complete(asyncio.wait([migrate()]))
     loop.close()
     print("Migrate done")
 
 
-if args.action.lower() == "dbshell":
+elif args.action.lower() == "dbshell":
     env['PYTHONPATH'] = os.path.abspath(os.curdir)
     loop = asyncio.get_event_loop()
     loop.run_until_complete(asyncio.wait([init_db()]))
-    loop.close()
-    IPython.embed(header="Starting a dbshell for WENDY ...\nType 'exit' to finish anytime you want.")
+    # loop.close()
+    IPython.start_ipython(argv=[])
