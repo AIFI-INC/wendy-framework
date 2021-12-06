@@ -9,7 +9,7 @@ import sys
 from os import environ as env
 sys.path.insert(0, os.path.abspath('.'))
 from wendy.utilities import isNonBlankString
-from config import TORTOISE_ORM
+from config import TORTOISE_ORM, init_db
 
 p = argparse.ArgumentParser(prog="WENDY")
 p.add_argument("action", help="The action you want to invoke.", type=str)
@@ -103,4 +103,8 @@ if args.action.lower() == "migrate":
 
 
 if args.action.lower() == "dbshell":
+    env['PYTHONPATH'] = os.path.abspath(os.curdir)
+    loop = asyncio.get_event_loop()
+    loop.run_until_complete(asyncio.wait([init_db()]))
+    loop.close()
     IPython.embed(header="Starting a dbshell for WENDY ...\nType 'exit' to finish anytime you want.")
