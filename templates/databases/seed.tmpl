@@ -7,7 +7,8 @@ from wendy.models import *
 from config import init_db
 
 __all__ = [
-    '{Model}Faker'
+    '{Model}Faker',
+    'seed_{model}'
 ]
 
 class {Model}Faker(object):
@@ -17,11 +18,12 @@ class {Model}Faker(object):
         await fake.save()
         return fake
 
-loop = asyncio.get_event_loop()
-loop.run_until_complete(asyncio.wait([    
-    {Model}Faker().generate(
-        # TODO: fill your attributes here
-    )
-]))
-loop.close()
+def seed_{model}():
+    loop = asyncio.get_event_loop()
+    loop.run_until_complete(asyncio.wait([    
+        {Model}Faker().generate(
+            # TODO: fill your attributes here
+        )
+    ]))
+    loop.close()
 
