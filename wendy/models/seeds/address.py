@@ -25,7 +25,12 @@ def seed_address():
     loop = asyncio.get_event_loop()
     loop.run_until_complete(asyncio.wait([
         AddressFaker().generate(
-            # TODO: fill your attributes here
+            country_code=84,
+            post_code=10000,
+            city="Hanoi",
+            province="Hanoi",
+            address_1="85 Nguyen Dinh Chieu, Ba Dinh",
+            address_2=None
         )
     ]))
     loop.close()

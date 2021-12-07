@@ -25,7 +25,9 @@ def seed_room():
     loop = asyncio.get_event_loop()
     loop.run_until_complete(asyncio.wait([
         RoomFaker().generate(
-            # TODO: fill your attributes here
+            name="Fake room",
+            floor=4,
+            building_id=2
         )
     ]))
     loop.close()

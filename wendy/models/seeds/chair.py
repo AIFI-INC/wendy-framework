@@ -25,7 +25,12 @@ def seed_chair():
     loop = asyncio.get_event_loop()
     loop.run_until_complete(asyncio.wait([
         ChairFaker().generate(
-            # TODO: fill your attributes here
+            position="Leader",
+            room_id=1
+        ),
+        ChairFaker().generate(
+            position="Dev",
+            room_id=1
         )
     ]))
     loop.close()

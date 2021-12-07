@@ -8,7 +8,8 @@ __all__ = [
 
 class Chair(Model):
     id = fields.BigIntField(pk=True)
-
+    position = fields.CharField(max_length=255)
+    room = fields.ForeignKeyField(model_name='models.Room', on_delete=fields.CASCADE)
     created_at = fields.DatetimeField(auto_now_add=True)
     updated_at = fields.DatetimeField(auto_now=True)
     deleted_at = fields.DatetimeField(null=True)
