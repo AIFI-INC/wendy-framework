@@ -1,0 +1,38 @@
+from tortoise.query_utils import Q
+from wendy.models.core import {Model}
+from tortoise.filters import *
+import datetime
+
+__all__ = [
+    'get_{model}_by_id',
+    'create_{model}',
+    'delete_{model}_by_id',
+    'update_{model}_by_id',
+]
+
+
+async def get_{model}_by_id(id: int):
+    return await {Model}.filter(Q(id=id))
+
+
+async def create_{model}(**kwargs):
+    return await {Model}.create(**kwargs)
+
+
+async def delete_{model}_by_id(id: int):
+    # FindAll
+    records = await get_{model}_by_id(id)
+    for record in records:
+        if record.deleted_at is None:
+            record.deleted_at = datetime.datetime.utcnow()
+            await record.save()
+
+
+async def update_{model}_by_id(id: int, **kwargs):
+    # FindAll
+    records = await get_{model}_by_id(id)
+    # then update
+    for record in records:
+        if record.deleted_at is None:
+            record.update_from_dict(data=dict(kwargs))
+            await record.save()

@@ -1,0 +1,9 @@
+fastapi
+tortoise-orm[accel,asyncmy]
+aerich
+fastapi-auth0
+python-dotenv
+uvicorn
+inflect
+iPython[all]
+Faker
