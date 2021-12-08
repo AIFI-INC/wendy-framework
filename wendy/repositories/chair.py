@@ -1,6 +1,7 @@
 from tortoise.query_utils import Q
 from wendy.models.core import Chair
 from tortoise.filters import *
+from tortoise.transactions import atomic
 import datetime
 
 __all__ = [
@@ -15,10 +16,12 @@ async def get_chair_by_id(id: int):
     return await Chair.filter(Q(id=id))
 
 
+@atomic()
 async def create_chair(**kwargs):
     return await Chair.create(**kwargs)
 
 
+@atomic()
 async def delete_chair_by_id(id: int):
     # FindAll
     records = await get_chair_by_id(id)
@@ -28,6 +31,7 @@ async def delete_chair_by_id(id: int):
             await record.save()
 
 
+@atomic()
 async def update_chair_by_id(id: int, **kwargs):
     # FindAll
     records = await get_chair_by_id(id)

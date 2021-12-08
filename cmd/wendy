@@ -15,8 +15,8 @@ from wendy.models.seeds import *
 p = argparse.ArgumentParser(prog="WENDY")
 p.add_argument("action", help="The action you want to invoke.", type=str)
 p.add_argument("--component", '-c', type=str, help="Name of the target component")
-p.add_argument('--repository', '-r', help="Repo name")
 p.add_argument('--entity', '-e', help="Name of the entity")
+p.add_argument('--field', '-f', help="The field to be validated")
 p.add_argument('--not-delete-when-downgrade', action='store_true', help="whether not to delete the migration file when downgrade")
 args = p.parse_args()
 
@@ -39,7 +39,8 @@ ALLOWED_ACTIONS = [
 ALLOWED_COMPONENTS = [
     'repository',
     'entity',
-    'seed'
+    'seed',
+    'validator'
 ]
 
 action = args.action
@@ -65,11 +66,11 @@ if args.action.lower() not in ALLOWED_ACTIONS:
 if args.action.lower() == "generate":
     if not isNonBlankString(args.component) or args.component not in ALLOWED_COMPONENTS:
         raise ValueError(f"--component must be set and must be one of the following values: [{', '.join(ALLOWED_COMPONENTS)}]")
-    if args.component.lower() == "repository" and isNonBlankString(args.repository):
+    if args.component.lower() == "repository" and isNonBlankString(args.entity):
         f = open(os.path.abspath('templates/databases/reposistory.tmpl'))
         tmpl = f.read()
         f.close()
-        repo_name = args.repository.lower()
+        repo_name = args.entity.lower()
         repo_name_capital = repo_name[0].upper() + repo_name[1:]
         try:
             from wendy.models import *
@@ -104,6 +105,7 @@ if args.action.lower() == "generate":
         fw.write(tmpl.format_map(
             {
                 'model': entity_name_capital,
+                'model_lowercase': entity_name,
                 'table_name': entity_name_plural
             }
         ))
@@ -133,6 +135,29 @@ if args.action.lower() == "generate":
         fw = open("wendy/models/seeds/__init__.py", "a+")
         fw.write(f"\nfrom .{entity_name} import *\n")
         fw.close()
+    elif args.component.lower() == "validator" and isNonBlankString(args.entity) and isNonBlankString(args.field):
+        f = open(os.path.abspath('templates/databases/validator.tmpl'))
+        tmpl = f.read()
+        f.close()
+        entity_name = args.entity.lower()
+        entity_name_capital = entity_name[0].upper() + entity_name[1:]
+        field_name = args.field.lower()
+        field_name_capital = field_name[0].upper() + field_name[1:]
+        seed_path = f"wendy/models/validators/{entity_name}_{field_name}.py"
+        fw = open(seed_path, 'w')
+        fw.write(tmpl.format_map(
+            {
+                'model': entity_name_capital,
+                'field': field_name_capital
+            }
+        ))
+        fw.close()
+        print(f"Validator file for field {field_name_capital} in {entity_name_capital} class was generated successfully. You can find the entity file at wendy/models/validators/{entity_name}_{field_name}.py")
+        print("Patching wendy/models/validators/__init__.py ...")
+        fw = open("wendy/models/validators/__init__.py", "a+")
+        fw.write(f"\nfrom .{entity_name}_{field_name} import *\n")
+        fw.close()
+
 
 elif args.action.lower() == "migrate":
     loop = asyncio.get_event_loop()

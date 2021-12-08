@@ -1,6 +1,7 @@
 from tortoise.query_utils import Q
 from wendy.models.core import Address
 from tortoise.filters import *
+from tortoise.transactions import atomic
 import datetime
 
 __all__ = [
@@ -15,10 +16,12 @@ async def get_address_by_id(id: int):
     return await Address.filter(Q(id=id))
 
 
+@atomic()
 async def create_address(**kwargs):
     return await Address.create(**kwargs)
 
 
+@atomic()
 async def delete_address_by_id(id: int):
     # FindAll
     records = await get_address_by_id(id)
@@ -28,6 +31,7 @@ async def delete_address_by_id(id: int):
             await record.save()
 
 
+@atomic()
 async def update_address_by_id(id: int, **kwargs):
     # FindAll
     records = await get_address_by_id(id)
