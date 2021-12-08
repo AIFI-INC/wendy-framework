@@ -25,7 +25,7 @@ def seed_building():
     loop = asyncio.get_event_loop()
     loop.run_until_complete(asyncio.wait([
         BuildingFaker().generate(
-            name="Fake building",
+            name=faker.name(),
             address_id=1
         )
     ]))
