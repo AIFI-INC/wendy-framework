@@ -104,6 +104,7 @@ if args.action.lower() == "generate":
         fw.write(tmpl.format_map(
             {
                 'model': entity_name_capital,
+                'model_lowercase': entity_name,
                 'table_name': entity_name_plural
             }
         ))

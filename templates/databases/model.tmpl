@@ -21,17 +21,17 @@ class {model}(Model):
         return "{model}"
 
 
-@pre_save({Model})
-async def {model}_pre_save(
-    sender: "Type[{Model}]", instance: {Model}, using_db, update_fields
+@pre_save({model})
+async def {model_lowercase}_pre_save(
+    sender: "Type[{model}]", instance: {model}, using_db, update_fields
 ) -> None:
     print(sender, instance, using_db, update_fields)
 
 
-@post_save({Model})
-async def {model}_post_save(
-    sender: "Type[{Model}]",
-    instance: {Model},
+@post_save({model})
+async def {model_lowercase}_post_save(
+    sender: "Type[{model}]",
+    instance: {model},
     created: bool,
     using_db: "Optional[BaseDBAsyncClient]",
     update_fields: List[str],
@@ -39,15 +39,15 @@ async def {model}_post_save(
     print(sender, instance, using_db, created, update_fields)
 
 
-@pre_delete({Model})
-async def {model}_pre_delete(
-    sender: "Type[{Model}]", instance: {Model}, using_db: "Optional[BaseDBAsyncClient]"
+@pre_delete({model})
+async def {model_lowercase}_pre_delete(
+    sender: "Type[{model}]", instance: {model}, using_db: "Optional[BaseDBAsyncClient]"
 ) -> None:
     print(sender, instance, using_db)
 
 
-@post_delete({Model})
-async def {model}_post_delete(
-    sender: "Type[{Model}]", instance: {Model}, using_db: "Optional[BaseDBAsyncClient]"
+@post_delete({model})
+async def {model_lowercase}_post_delete(
+    sender: "Type[{model}]", instance: {model}, using_db: "Optional[BaseDBAsyncClient]"
 ) -> None:
     print(sender, instance, using_db)
