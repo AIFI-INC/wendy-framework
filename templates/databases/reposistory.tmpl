@@ -1,6 +1,7 @@
 from tortoise.query_utils import Q
 from wendy.models.core import {Model}
 from tortoise.filters import *
+from tortoise.transactions import atomic
 import datetime
 
 __all__ = [
@@ -15,10 +16,12 @@ async def get_{model}_by_id(id: int):
     return await {Model}.filter(Q(id=id))
 
 
+@atomic()
 async def create_{model}(**kwargs):
     return await {Model}.create(**kwargs)
 
 
+@atomic()
 async def delete_{model}_by_id(id: int):
     # FindAll
     records = await get_{model}_by_id(id)
@@ -28,6 +31,7 @@ async def delete_{model}_by_id(id: int):
             await record.save()
 
 
+@atomic()
 async def update_{model}_by_id(id: int, **kwargs):
     # FindAll
     records = await get_{model}_by_id(id)

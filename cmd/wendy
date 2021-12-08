@@ -15,7 +15,6 @@ from wendy.models.seeds import *
 p = argparse.ArgumentParser(prog="WENDY")
 p.add_argument("action", help="The action you want to invoke.", type=str)
 p.add_argument("--component", '-c', type=str, help="Name of the target component")
-p.add_argument('--repository', '-r', help="Repo name")
 p.add_argument('--entity', '-e', help="Name of the entity")
 p.add_argument('--field', '-f', help="The field to be validated")
 p.add_argument('--not-delete-when-downgrade', action='store_true', help="whether not to delete the migration file when downgrade")
@@ -67,11 +66,11 @@ if args.action.lower() not in ALLOWED_ACTIONS:
 if args.action.lower() == "generate":
     if not isNonBlankString(args.component) or args.component not in ALLOWED_COMPONENTS:
         raise ValueError(f"--component must be set and must be one of the following values: [{', '.join(ALLOWED_COMPONENTS)}]")
-    if args.component.lower() == "repository" and isNonBlankString(args.repository):
+    if args.component.lower() == "repository" and isNonBlankString(args.entity):
         f = open(os.path.abspath('templates/databases/reposistory.tmpl'))
         tmpl = f.read()
         f.close()
-        repo_name = args.repository.lower()
+        repo_name = args.entity.lower()
         repo_name_capital = repo_name[0].upper() + repo_name[1:]
         try:
             from wendy.models import *
