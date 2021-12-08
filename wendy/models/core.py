@@ -14,10 +14,10 @@ class Address(Model):
         description='the longtitude of the place', null=True)
     latitude = fields.FloatField(
         description='the latitude of the place', null=True)
-    country_code = fields.IntField(null=False, default=81)
-    post_code = fields.CharField(max_length=50, null=True)
-    city = fields.CharField(max_length=255)
-    province = fields.CharField(max_length=255)
+    country_code = fields.CharField(null=False, default='jp', max_length=5)
+    post_code = fields.CharField(max_length=50, null=False)
+    city = fields.CharField(max_length=255, null=True)
+    province = fields.CharField(max_length=255, null=True)
     address_1 = fields.CharField(max_length=255)
     address_2 = fields.CharField(max_length=255, null=True)
     created_at = fields.DatetimeField(auto_now_add=True)
@@ -26,7 +26,8 @@ class Address(Model):
 
     class Meta:
         table = 'addresses'
-        unique_together = (('longtitude', 'latitude'), )
+        unique_together = (('longtitude', 'latitude'),
+                           ('country_code', 'post_code', 'address_1'))
 
     def __str__(self) -> str:
         return f"{self.country_code} {self.post_code} {self.province}, {self.city}, {self.address_1}, {self.address_2}"
