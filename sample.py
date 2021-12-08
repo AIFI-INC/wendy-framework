@@ -1,1 +1,1 @@
-from wendy.controllers import *
+from wendy import *

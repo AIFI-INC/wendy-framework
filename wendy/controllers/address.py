@@ -1,6 +1,8 @@
-from wendy import app
+from fastapi import APIRouter
+
+router = APIRouter()
 
 
-@app.get("/v1/addresses")
+@router.get("/addresses")
 async def home():
     return {"message": "welcome"}
