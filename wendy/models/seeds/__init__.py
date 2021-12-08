@@ -14,3 +14,5 @@ from .building import *
 from .address import *
 
 from .room import *
+
+from .table import *

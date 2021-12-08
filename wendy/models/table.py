@@ -4,11 +4,11 @@ from tortoise.models import Model
 from tortoise.signals import post_delete, post_save, pre_delete, pre_save
 
 __all__ = [
-    '{model}'
+    'Table'
 ]
 
 
-class {model}(Model):
+class Table(Model):
     id = fields.BigIntField(pk=True)
 
     created_at = fields.DatetimeField(auto_now_add=True)
@@ -16,24 +16,24 @@ class {model}(Model):
     deleted_at = fields.DatetimeField(null=True)
 
     class Meta:
-        table = '{table_name}'
+        table = 'tables'
         unique_together = ()
 
     def __str__(self) -> str:
-        return "{model}"
+        return "Table"
 
 
-@pre_save({model})
-async def {model_lowercase}_pre_save(
-    sender: "Type[{model}]", instance: {model}, using_db, update_fields
+@pre_save(Table)
+async def table_pre_save(
+    sender: "Type[Table]", instance: Table, using_db, update_fields
 ) -> None:
     print(sender, instance, using_db, update_fields)
 
 
-@post_save({model})
-async def {model_lowercase}_post_save(
-    sender: "Type[{model}]",
-    instance: {model},
+@post_save(Table)
+async def table_post_save(
+    sender: "Type[Table]",
+    instance: Table,
     created: bool,
     using_db: "Optional[BaseDBAsyncClient]",
     update_fields: List[str],
@@ -41,15 +41,15 @@ async def {model_lowercase}_post_save(
     print(sender, instance, using_db, created, update_fields)
 
 
-@pre_delete({model})
-async def {model_lowercase}_pre_delete(
-    sender: "Type[{model}]", instance: {model}, using_db: "Optional[BaseDBAsyncClient]"
+@pre_delete(Table)
+async def table_pre_delete(
+    sender: "Type[Table]", instance: Table, using_db: "Optional[BaseDBAsyncClient]"
 ) -> None:
     print(sender, instance, using_db)
 
 
-@post_delete({model})
-async def {model_lowercase}_post_delete(
-    sender: "Type[{model}]", instance: {model}, using_db: "Optional[BaseDBAsyncClient]"
+@post_delete(Table)
+async def table_post_delete(
+    sender: "Type[Table]", instance: Table, using_db: "Optional[BaseDBAsyncClient]"
 ) -> None:
     print(sender, instance, using_db)
