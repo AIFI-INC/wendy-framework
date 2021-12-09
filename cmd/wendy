@@ -8,16 +8,18 @@ import os
 import sys
 from os import environ as env
 sys.path.insert(0, os.path.abspath('.'))
-from wendy.utilities import isNonBlankString
-from config import TORTOISE_ORM, init_db
 from wendy.models.seeds import *
+from config import TORTOISE_ORM, init_db
+from wendy.utilities import isNonBlankString
 
 p = argparse.ArgumentParser(prog="WENDY")
 p.add_argument("action", help="The action you want to invoke.", type=str)
-p.add_argument("--component", '-c', type=str, help="Name of the target component")
+p.add_argument("--component", '-c', type=str,
+               help="Name of the target component")
 p.add_argument('--entity', '-e', help="Name of the entity")
 p.add_argument('--field', '-f', help="The field to be validated")
-p.add_argument('--not-delete-when-downgrade', action='store_true', help="whether not to delete the migration file when downgrade")
+p.add_argument('--not-delete-when-downgrade', action='store_true',
+               help="whether not to delete the migration file when downgrade")
 args = p.parse_args()
 
 command = Command(
@@ -40,7 +42,8 @@ ALLOWED_COMPONENTS = [
     'repository',
     'entity',
     'seed',
-    'validator'
+    'validator',
+    'controller'
 ]
 
 action = args.action
@@ -49,11 +52,13 @@ action = args.action
 async def migrate():
     await command.init()
     await command.migrate(name="update")
-    
+
+
 async def up():
     await migrate()
     migrations = await command.upgrade()
     print(f"Applied the following versions: {migrations}")
+
 
 async def down():
     await command.init()
@@ -61,11 +66,13 @@ async def down():
     await command.downgrade(version=len(versions)-1, delete=not args.not_delete_when_downgrade)
 
 if args.action.lower() not in ALLOWED_ACTIONS:
-    raise ValueError(f"action must be one of the following values: [{', '.join(ALLOWED_ACTIONS)}]")
+    raise ValueError(
+        f"action must be one of the following values: [{', '.join(ALLOWED_ACTIONS)}]")
 
 if args.action.lower() == "generate":
     if not isNonBlankString(args.component) or args.component not in ALLOWED_COMPONENTS:
-        raise ValueError(f"--component must be set and must be one of the following values: [{', '.join(ALLOWED_COMPONENTS)}]")
+        raise ValueError(
+            f"--component must be set and must be one of the following values: [{', '.join(ALLOWED_COMPONENTS)}]")
     if args.component.lower() == "repository" and isNonBlankString(args.entity):
         f = open(os.path.abspath('templates/databases/reposistory.tmpl'))
         tmpl = f.read()
@@ -88,7 +95,8 @@ if args.action.lower() == "generate":
             }
         ))
         fw.close()
-        print(f"Repo file for {repo_name_capital} class was generated successfully. You can find the repo file at wendy/repositories/{repo_name}.py")
+        print(
+            f"Repo file for {repo_name_capital} class was generated successfully. You can find the repo file at wendy/repositories/{repo_name}.py")
         print("Patching wendy/repositories/__init__.py ...")
         fw = open("wendy/repositories/__init__.py", "a+")
         fw.write(f"\nfrom .{repo_name} import *\n")
@@ -110,7 +118,8 @@ if args.action.lower() == "generate":
             }
         ))
         fw.close()
-        print(f"Entity file for {entity_name_capital} class was generated successfully. You can find the entity file at wendy/models/{entity_name}.py")
+        print(
+            f"Entity file for {entity_name_capital} class was generated successfully. You can find the entity file at wendy/models/{entity_name}.py")
         print("Patching wendy/models/__init__.py ...")
         fw = open("wendy/models/__init__.py", "a+")
         fw.write(f"\nfrom .{entity_name} import *\n")
@@ -121,6 +130,13 @@ if args.action.lower() == "generate":
         f.close()
         entity_name = args.entity.lower()
         entity_name_capital = entity_name[0].upper() + entity_name[1:]
+        try:
+            from wendy.models import *
+            eval(entity_name_capital)
+        except NameError as ne:
+            print(
+                f"Class {entity_name_capital} cannot be found. Plz update your entities first!")
+            raise
         seed_path = f"wendy/models/seeds/{entity_name}.py"
         fw = open(seed_path, 'w')
         fw.write(tmpl.format_map(
@@ -130,7 +146,8 @@ if args.action.lower() == "generate":
             }
         ))
         fw.close()
-        print(f"Seed file for {entity_name_capital} class was generated successfully. You can find the entity file at wendy/models/seeds/{entity_name}.py")
+        print(
+            f"Seed file for {entity_name_capital} class was generated successfully. You can find the entity file at wendy/models/seeds/{entity_name}.py")
         print("Patching wendy/models/seeds/__init__.py ...")
         fw = open("wendy/models/seeds/__init__.py", "a+")
         fw.write(f"\nfrom .{entity_name} import *\n")
@@ -144,6 +161,13 @@ if args.action.lower() == "generate":
         field_name = args.field.lower()
         field_name_capital = field_name[0].upper() + field_name[1:]
         seed_path = f"wendy/models/validators/{entity_name}_{field_name}.py"
+        try:
+            from wendy.models import *
+            eval(entity_name_capital)
+        except NameError as ne:
+            print(
+                f"Class {entity_name_capital} cannot be found. Plz update your entities first!")
+            raise
         fw = open(seed_path, 'w')
         fw.write(tmpl.format_map(
             {
@@ -156,6 +180,37 @@ if args.action.lower() == "generate":
         print("Patching wendy/models/validators/__init__.py ...")
         fw = open("wendy/models/validators/__init__.py", "a+")
         fw.write(f"\nfrom .{entity_name}_{field_name} import *\n")
+        fw.close()
+    elif args.component.lower() == "controller" and isNonBlankString(args.entity):
+        f = open(os.path.abspath('templates/logic/controller.tmpl'))
+        tmpl = f.read()
+        f.close()
+        entity_name = args.entity.lower()
+        entity_name_capital = entity_name[0].upper() + entity_name[1:]
+        entity_name_plural = inflect.engine().plural(entity_name)
+        try:
+            from wendy.models import *
+            eval(entity_name_capital)
+        except NameError as ne:
+            print(
+                f"Class {entity_name_capital} cannot be found. Plz update your entities first!")
+            raise
+        c_path = f"wendy/controllers/{entity_name}.py"
+        fw = open(c_path, 'w')
+        fw.write(tmpl.format_map(
+            {
+                'model': entity_name,
+                'Model': entity_name_capital,
+                'model_plural': entity_name_plural,
+                'id': 'id'
+            }
+        ))
+        fw.close()
+        print(
+            f"Controller file for {entity_name_capital} class was generated successfully. You can find the controller file at wendy/controllers/{entity_name}.py")
+        print("Patching wendy/controllers/__init__.py ...")
+        fw = open("wendy/controllers/__init__.py", "a+")
+        fw.write(f"\nfrom .{entity_name} import *\n")
         fw.close()
 
 
@@ -192,7 +247,8 @@ elif args.action.lower() == 'seed':
     try:
         f = eval(f'seed_{entity_name}')
     except NameError as ne:
-        print(f"Seeding method seed_{entity_name} is not found. Plz run `wendy generate -c seed -e {entity_name}` first")
+        print(
+            f"Seeding method seed_{entity_name} is not found. Plz run `wendy generate -c seed -e {entity_name}` first")
         raise
     try:
         f()

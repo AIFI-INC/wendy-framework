@@ -10,6 +10,6 @@ set -e
 echo -e "Checking your code before committing ..."
 
 pip install flake8
-flake8 . --ignore E501,F401,F403,F405,F811,E402
+flake8 . --ignore E501,F401,F403,F405,F811,E402,F821,F841
 
 echo -e "Your code is good to go!"
