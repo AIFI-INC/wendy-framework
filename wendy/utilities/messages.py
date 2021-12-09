@@ -1,0 +1,1 @@
+MSG_500_ERROR   = "Could not resolve this request"
