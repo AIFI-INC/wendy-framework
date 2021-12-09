@@ -1,0 +1,58 @@
+name: PR to staging
+
+on:
+  push:
+    branches:
+      - develop
+
+jobs:
+  pr-staging:
+    name: Automatically create/update PR
+    runs-on: ubuntu-latest
+    needs: []
+    steps:
+    - uses: actions/checkout@v2.4.0
+    - name: pull-request
+      uses: repo-sync/pull-request@v2.6
+      with:
+        source_branch: "develop"                                 # If blank, default: triggered branch
+        destination_branch: "staging"                      # If blank, default: master
+        pr_title: "Pulling develop into staging" # Title of pull request
+        # pr_body: ":crown: *An automated PR*"              # Full markdown support, requires pr_title to be set
+        pr_template: ".github/PULL_REQUEST_TEMPLATE.md"   # Path to pull request template, requires pr_title to be set, excludes pr_body
+        pr_reviewer: "wanted2"                         # Comma-separated list (no spaces)
+        pr_assignee: "wanted2"                         # Comma-separated list (no spaces)
+        pr_label: "auto-pr,merge"                               # Comma-separated list (no spaces)
+        # pr_milestone: "Milestone 1"                       # Milestone name
+        pr_draft: false                                    # Creates pull request as draft
+        pr_allow_empty: false                              # Creates pull request even if there are no changes
+        github_token: ${{ secrets.GITHUB_TOKEN }}
+
+  deploy-to-develop:
+    name: Deploy to develop environment
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check Out Repo 
+        uses: actions/checkout@v2.4.0
+
+      - name: Login to Docker Hub
+        uses: docker/login-action@v1
+        with:
+          username: ${{ secrets.DOCKER_HUB_USERNAME }}
+          password: ${{ secrets.DOCKER_HUB_ACCESS_TOKEN }}
+
+      - name: Set up Docker Buildx
+        id: buildx
+        uses: docker/setup-buildx-action@v1
+
+      - name: Build and push
+        id: docker_build
+        uses: docker/build-push-action@v2
+        with:
+          context: ./
+          file: ./Dockerfile
+          push: true
+          tags: ${{ secrets.DOCKER_HUB_USERNAME }}/wendy:latest
+
+      - name: Image digest
+        run: echo ${{ steps.docker_build.outputs.digest }}

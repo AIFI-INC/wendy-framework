@@ -1,5 +1,6 @@
 from fastapi import FastAPI, APIRouter
 import wendy.controllers as controllers
+from wendy.controllers import ResponseModel
 
 app = FastAPI(
     debug=True,
