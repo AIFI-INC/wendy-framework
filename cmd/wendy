@@ -3,6 +3,7 @@ import asyncio
 import argparse
 import inflect
 import IPython
+from uvicorn import run
 
 import os
 import sys
@@ -20,6 +21,8 @@ p.add_argument('--entity', '-e', help="Name of the entity")
 p.add_argument('--field', '-f', help="The field to be validated")
 p.add_argument('--not-delete-when-downgrade', action='store_true',
                help="whether not to delete the migration file when downgrade")
+p.add_argument('--host', help="host to run develop server", default='0.0.0.0', type=str)
+p.add_argument('--port', help='port to run develop server', default=8000, type=int)
 args = p.parse_args()
 
 command = Command(
@@ -257,3 +260,6 @@ elif args.action.lower() == 'seed':
         raise
 
     print("Seeding done!")
+
+elif args.action.lower() == "run":
+    run("sample:app", host=args.host, port=args.port, workers=1, log_level="debug")
