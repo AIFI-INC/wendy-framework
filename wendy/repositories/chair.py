@@ -1,5 +1,5 @@
 from tortoise.query_utils import Q
-from wendy.models.core import Chair
+from wendy.models.chair import Chair
 from tortoise.filters import *
 from tortoise.transactions import atomic
 import datetime

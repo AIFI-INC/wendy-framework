@@ -1,0 +1,87 @@
+from typing import List
+from fastapi import APIRouter, Response, status
+from wendy.models import {Model}
+from wendy.repositories import create_{model}, update_{model}_by_id, get_{model}_by_id, delete_{model}_by_id
+from wendy.utilities import MSG_200_OK, MSG_500_ERROR, messages
+from config import init_db, close_db
+from tortoise.transactions import in_transaction
+from pydantic import BaseModel
+import logging
+from logging import config
+config.fileConfig('config/logging.conf', disable_existing_loggers=False)
+LOG = logging.getLogger(__file__)
+router = APIRouter()
+
+
+class {Model}API(BaseModel):
+
+    class Config:
+        orm_mode = True
+
+
+class ResponseModel(BaseModel):
+    message: str
+
+
+@router.get("/{model_plural}", status_code=status.HTTP_200_OK)
+async def list(response: Response):
+    return None
+
+
+@router.post("/{model}", response_model=ResponseModel, status_code=status.HTTP_200_OK)
+async def create({model}: {Model}API, response: Response):
+    output = ResponseModel(
+        message=MSG_200_OK
+    )
+    try:
+        await init_db()
+        await create_{model}(
+            # TODO: add your attributes
+        )
+    except Exception as e:
+        LOG.error(e)  # log internal errors for further investigation
+        output.message = MSG_500_ERROR  # hide internal errors from outsiders
+        response.status_code = status.HTTP_500_INTERNAL_SERVER_ERROR
+    return output
+
+
+@router.delete("/{model}/{{id}}", response_model=ResponseModel, status_code=status.HTTP_200_OK)
+async def delete(id: int, response: Response):
+    output = ResponseModel(
+        message=MSG_200_OK
+    )
+    try:
+        await init_db()
+        await delete_{model}_by_id(id=id)
+    except Exception as e:
+        LOG.error(e)
+        output.message = MSG_500_ERROR
+        response.status_code = status.HTTP_500_INTERNAL_SERVER_ERROR
+    return output
+
+
+@router.put("/{model}/{{id}}", response_model=ResponseModel, status_code=status.HTTP_200_OK)
+async def update({model}: {Model}API, id: int, response: Response):
+    output = ResponseModel(
+        message=MSG_200_OK
+    )
+    try:
+        await init_db()
+        await update_{model}_by_id(id=id)
+    except Exception as e:
+        LOG.error(e)
+        output.message = MSG_500_ERROR
+        response.status_code = status.HTTP_500_INTERNAL_SERVER_ERROR
+    return output
+
+
+@router.get("/{model}/{{id}}", status_code=status.HTTP_200_OK)
+async def get(id: int, response: Response):
+    {model} = None
+    try:
+        await init_db()
+        {model} = await get_{model}_by_id(id=id)
+    except Exception as e:
+        LOG.error(e)
+        response.status_code = status.HTTP_500_INTERNAL_SERVER_ERROR
+    return address

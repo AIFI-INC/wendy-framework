@@ -27,7 +27,7 @@ class Address(Model):
     class Meta:
         table = 'addresses'
         unique_together = (('longtitude', 'latitude'),
-                           ('country_code', 'post_code', 'address_1'))
+                           ('country_code', 'post_code', 'address_1', 'address_2'))
 
     def __str__(self) -> str:
         return f"{self.country_code} {self.post_code} {self.province}, {self.city}, {self.address_1}, {self.address_2}"
