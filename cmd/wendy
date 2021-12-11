@@ -10,8 +10,19 @@ import sys
 from os import environ as env
 sys.path.insert(0, os.path.abspath('.'))
 from wendy.models.seeds import *
-from config import TORTOISE_ORM, init_db
+from config import init_db
 from wendy.utilities import isNonBlankString
+TORTOISE_ORM = {
+    "connections": {
+        "default": env.get('MYSQL_URL', "mysql://root@127.0.0.1:3306/wendy")
+    },
+    "apps": {
+        "models": {
+            "models": ["wendy.models", "aerich.models"],
+            "default_connection": "default",
+        },
+    },
+}
 
 p = argparse.ArgumentParser(prog="WENDY")
 p.add_argument("action", help="The action you want to invoke.", type=str)
