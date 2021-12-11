@@ -25,6 +25,15 @@ jobs:
       - name: Linting
         run: |
           flake8 . --ignore E501,F401,F403,F405,F811,E402,F821,F841
+      - name: Notify M$ Teams
+        if: ${{ failed() }}
+        uses: jdcargile/ms-teams-notification@v1.3
+        with:
+          github-token: ${{ github.token }} # this will use the runner's token.
+          ms-teams-webhook-uri: ${{ secrets.MS_TEAM_HOOK_URL }}
+          notification-summary: "Linting failed for commit ${{ github.sha }}"
+          timezone: Asia/Tokyo
+          notification-color: e3241a
 
   testing:
     name: Testing the wendy package
@@ -39,7 +48,10 @@ jobs:
         uses: actions/checkout@v2.4.0
       - name: Run MySQL container
         run: |
-          docker run --rm -itd -e MYSQL_ALLOW_EMPTY_PASSWORD=yes -e MYSQL_USER=root -e MYSQL_DATABASE=wendy -p 3306:3306 mysql:5.7
+          docker run --rm -itd -e MYSQL_ALLOW_EMPTY_PASSWORD=yes -e MYSQL_DATABASE=wendy -p 3306:3306 mysql:5.7
+      - name: Database migration
+        run: |
+          python cmd/wendy migrate:up
       - name: Install dependencies
         run: |
           pip3 install -r requirements.txt
@@ -52,6 +64,15 @@ jobs:
           export PYTHONPATH=`pwd`
           echo "integration testing ..."
           pytest -v --full-trace --cache-clear
+      - name: Notify M$ Teams
+        if: ${{ failed() }}
+        uses: jdcargile/ms-teams-notification@v1.3
+        with:
+          github-token: ${{ github.token }} # this will use the runner's token.
+          ms-teams-webhook-uri: ${{ secrets.MS_TEAM_HOOK_URL }}
+          notification-summary: "Integration tests failed for commit ${{ github.sha }}"
+          timezone: Asia/Tokyo
+          notification-color: e3241a
 
   pr-develop:
     name: Automatically create/update PR

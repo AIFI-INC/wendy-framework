@@ -59,7 +59,8 @@ async def migrate():
 
 
 async def up():
-    await migrate()
+    # await migrate()
+    await command.init()
     migrations = await command.upgrade()
     print(f"Applied the following versions: {migrations}")
 
