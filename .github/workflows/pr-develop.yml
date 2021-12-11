@@ -142,16 +142,42 @@ jobs:
         pr_draft: false                                    # Creates pull request as draft
         pr_allow_empty: false                              # Creates pull request even if there are no changes
         github_token: ${{ secrets.GITHUB_TOKEN }}
-  notify-teams:
+  notify-teams-develop:
     name: Notify M$ Teams channels
     runs-on: ubuntu-latest
-    needs: [pr-develop,pr-staging,pr-main]
+    needs: [pr-develop]
     steps:
       - name: Notify M$ Teams
         uses: jdcargile/ms-teams-notification@v1.3
         with:
           github-token: ${{ github.token }} # this will use the runner's token.
           ms-teams-webhook-uri: ${{ secrets.MS_TEAM_HOOK_URL }}
-          notification-summary: "Finished integration of commit ${{ github.sha }}"
+          notification-summary: "Finished integration of commit ${{ github.sha }} which will is wanted to integrate to develop"
+          timezone: Asia/Tokyo
+          notification-color: 486ee8
+  notify-teams-staging:
+    name: Notify M$ Teams channels
+    runs-on: ubuntu-latest
+    needs: [pr-staging]
+    steps:
+      - name: Notify M$ Teams
+        uses: jdcargile/ms-teams-notification@v1.3
+        with:
+          github-token: ${{ github.token }} # this will use the runner's token.
+          ms-teams-webhook-uri: ${{ secrets.MS_TEAM_HOOK_URL }}
+          notification-summary: "Finished integration of commit ${{ github.sha }} which will is wanted to integrate to staging"
+          timezone: Asia/Tokyo
+          notification-color: 486ee8
+  notify-teams-production:
+    name: Notify M$ Teams channels
+    runs-on: ubuntu-latest
+    needs: [pr-main]
+    steps:
+      - name: Notify M$ Teams
+        uses: jdcargile/ms-teams-notification@v1.3
+        with:
+          github-token: ${{ github.token }} # this will use the runner's token.
+          ms-teams-webhook-uri: ${{ secrets.MS_TEAM_HOOK_URL }}
+          notification-summary: "Finished integration of commit ${{ github.sha }} which will is wanted to integrate to main"
           timezone: Asia/Tokyo
           notification-color: 486ee8
