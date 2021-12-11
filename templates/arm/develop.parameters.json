@@ -29,9 +29,6 @@
         "databaseSkuTier": {
             "value": "GeneralPurpose"
         },
-        "location": {
-            "value": "useast"
-        },
         "mySqlVersion": {
             "value": "5.7"
         }
