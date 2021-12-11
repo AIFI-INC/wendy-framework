@@ -28,7 +28,7 @@ jobs:
         pr_allow_empty: false                              # Creates pull request even if there are no changes
         github_token: ${{ secrets.GITHUB_TOKEN }}
 
-  deploy-to-develop:
+  build-docker-develop:
     name: Deploy to develop environment
     runs-on: ubuntu-latest
     steps:
@@ -56,3 +56,91 @@ jobs:
 
       - name: Image digest
         run: echo ${{ steps.docker_build.outputs.digest }}
+
+      - name: Notify M$ Teams
+        if: ${{ failure() }}
+        uses: jdcargile/ms-teams-notification@v1.3
+        with:
+          github-token: ${{ github.token }} # this will use the runner's token.
+          ms-teams-webhook-uri: ${{ secrets.MS_TEAM_HOOK_URL }}
+          notification-summary: "Could not build docker image for ${{ github.sha }}"
+          timezone: Asia/Tokyo
+          notification-color: e3241a
+
+      # Rules for using environments:
+      # DEVELOP: only start when confirmation needed and must be DELETED after 
+      # confirmation to avoid additional charges ($).
+      # after merging a carefully linted/tested PR into develop, this process begins.
+      # STAGING: the same as DEVELOP. After confirmation in DEVELOP finish, 
+      # the approver will merge into staging and then this process is started.
+      # PRODUCTION: Run continuously even when there is no confirmation.
+      # DEVELOP/STAGING must be deleted after review processes finished!
+      - name: Notify M$ Teams
+        uses: jdcargile/ms-teams-notification@v1.3
+        with:
+          github-token: ${{ github.token }}
+          ms-teams-webhook-uri: ${{ secrets.MS_TEAM_HOOK_URL }}
+          notification-summary: "Updated docker container with ${{ steps.docker_build.outputs.digest }}. We need you to approve this content by starting a develop environment in Azure. Due to Azure need login using username and password, for security reason create environments manually and delete after confirming."
+          timezone: Asia/Tokyo
+          notification-color: 486ee8
+  
+  deploy-to-azure:
+    name: Deploy the docker container to M$ Azure App Services
+    runs-on: ubuntu-latest
+    needs: [build-docker-develop]
+    environment: develop
+    strategy:
+      fail-fast: true
+    steps:
+      - name: Echo
+        run: |
+          echo "Thank you for helping us reviewing this work. Plz use `cmd/start_env.sh` to start a develop environment."
+          echo "And DON'T forget to delete the environment after reviewing using `cmd/stop_env.sh`"
+      - name: Notify M$ Teams
+        uses: jdcargile/ms-teams-notification@v1.3
+        with:
+          github-token: ${{ github.token }}
+          ms-teams-webhook-uri: ${{ secrets.MS_TEAM_HOOK_URL }}
+          notification-summary: "Someone agreed to review this work and to provision a develop environment for commit ${{ github.sha }}. DON'T forget to delete this environment after you approve the work to avoid additional charges."
+          timezone: Asia/Tokyo
+          notification-color: 486ee8
+
+  # Rules:
+  # The company starts at 8AM, and DEV/STAGING environments will be started after that time.
+  # The company stop at 5PM, and all provisioned DEV/STAGING environments must be stopped to avoid additional charges.
+  # No OT, and if an message is sent to M$ Teams befor or after 8AM-5PM of working days, a serious situation is raised!
+  rollback-azure:
+    name: Delete the provisioned environment to avoid additional charges
+    strategy:
+      fail-fast: 
+    runs-on: ubuntu-latest
+    needs: [deploy-to-azure]
+    environment: develop
+    steps:
+      - name: Echo
+        run: |
+          echo "Thank you for your reviews."
+          echo "Please DON'T forget to delete the develop environment using `cmd/stop_env.sh`."
+          echo "Also, plz reports your feedbacks to the authors."
+      - name: Notify M$ Teams
+        uses: jdcargile/ms-teams-notification@v1.3
+        with:
+          github-token: ${{ github.token }}
+          ms-teams-webhook-uri: ${{ secrets.MS_TEAM_HOOK_URL }}
+          notification-summary: "Someone finished a review for commit ${{ github.sha }}, the provisioned environment should be DELETED. DON'T forget to let the authors know your feedback!"
+          timezone: Asia/Tokyo
+          notification-color: 486ee8
+
+  notify-teams:
+    name: Notify M$ Teams channels
+    runs-on: ubuntu-latest
+    needs: [pr-staging]
+    steps:
+      - name: Notify M$ Teams
+        uses: jdcargile/ms-teams-notification@v1.3
+        with:
+          github-token: ${{ github.token }} # this will use the runner's token.
+          ms-teams-webhook-uri: ${{ secrets.MS_TEAM_HOOK_URL }}
+          notification-summary: "Someone merged commit ${{ github.sha }} into develop which triggered a PR to staging"
+          timezone: Asia/Tokyo
+          notification-color: 486ee8
