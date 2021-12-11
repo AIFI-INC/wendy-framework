@@ -112,7 +112,7 @@ jobs:
   rollback-azure:
     name: Delete the provisioned environment to avoid additional charges
     strategy:
-      fail-fast: 
+      fail-fast: true
     runs-on: ubuntu-latest
     needs: [deploy-to-azure]
     environment: develop
