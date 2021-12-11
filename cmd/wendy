@@ -46,7 +46,8 @@ ALLOWED_COMPONENTS = [
     'entity',
     'seed',
     'validator',
-    'controller'
+    'controller',
+    'integration_test'
 ]
 
 action = args.action
@@ -215,6 +216,30 @@ if args.action.lower() == "generate":
         fw = open("wendy/controllers/__init__.py", "a+")
         fw.write(f"\nfrom .{entity_name} import *\n")
         fw.close()
+    elif args.component.lower() == "integration_test" and isNonBlankString(args.entity):
+        f = open(os.path.abspath('templates/testing/integration_test.tmpl'))
+        tmpl = f.read()
+        f.close()
+        entity_name = args.entity.lower()
+        entity_name_capital = entity_name[0].upper() + entity_name[1:]
+        entity_name_plural = inflect.engine().plural(entity_name)
+        try:
+            from wendy.models import *
+            eval(entity_name_capital)
+        except NameError as ne:
+            print(
+                f"Class {entity_name_capital} cannot be found. Plz update your entities first!")
+            raise
+        c_path = f"tests/integration/pytest/test_{entity_name}.py"
+        fw = open(c_path, 'w')
+        fw.write(tmpl.format_map(
+            {
+                'model_plural': entity_name_plural,
+            }
+        ))
+        fw.close()
+        print(
+            f"Integration test file for {entity_name_capital} class was generated successfully. You can find the integration test file at tests/integration/pytest/test_{entity_name}.py")
 
 
 elif args.action.lower() == "migrate":
