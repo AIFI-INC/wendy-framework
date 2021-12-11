@@ -1,6 +1,7 @@
-from fastapi import FastAPI, APIRouter
+from fastapi import FastAPI, APIRouter, staticfiles
 import wendy.controllers as controllers
 from wendy.controllers import ResponseModel
+from config import *
 
 app = FastAPI(
     debug=True,
@@ -14,3 +15,4 @@ router.include_router(controllers.room.router)
 router.include_router(controllers.table.router)
 router.include_router(controllers.chair.router)
 app.include_router(router)
+app.mount('/static', staticfiles.StaticFiles(directory=env.get('STATIC_DIR', 'static')), name='static')
