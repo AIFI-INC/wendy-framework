@@ -1,0 +1,376 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="ja" >
+<head>
+  <meta charset="utf-8" />
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  
+  <title>wendy.models package &mdash; wendy-framework v1.0.0 ドキュメント</title>
+  
+
+  
+  <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+
+  
+  
+
+  
+  
+
+  
+
+  
+  <!--[if lt IE 9]>
+    <script src="_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+        <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
+        <script src="_static/jquery.js"></script>
+        <script src="_static/underscore.js"></script>
+        <script src="_static/doctools.js"></script>
+        <script src="_static/translations.js"></script>
+    
+    <script type="text/javascript" src="_static/js/theme.js"></script>
+
+    
+    <link rel="index" title="索引" href="genindex.html" />
+    <link rel="search" title="検索" href="search.html" />
+    <link rel="next" title="wendy.models.seeds package" href="wendy.models.seeds.html" />
+    <link rel="prev" title="wendy.controllers package" href="wendy.controllers.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="index.html" class="icon icon-home"> wendy-framework
+          
+
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption" role="heading"><span class="caption-text">目次</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="command.html">コマンド</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="modules.html">wendy</a><ul class="current">
+<li class="toctree-l2 current"><a class="reference internal" href="wendy.html">wendy package</a><ul class="current">
+<li class="toctree-l3 current"><a class="reference internal" href="wendy.html#subpackages">Subpackages</a><ul class="current">
+<li class="toctree-l4"><a class="reference internal" href="wendy.controllers.html">wendy.controllers package</a></li>
+<li class="toctree-l4 current"><a class="current reference internal" href="#">wendy.models package</a></li>
+<li class="toctree-l4"><a class="reference internal" href="wendy.repositories.html">wendy.repositories package</a></li>
+<li class="toctree-l4"><a class="reference internal" href="wendy.services.html">wendy.services package</a></li>
+<li class="toctree-l4"><a class="reference internal" href="wendy.utilities.html">wendy.utilities package</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="wendy.html#module-wendy">Module contents</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+            
+          
+        </div>
+        
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">wendy-framework</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="index.html" class="icon icon-home"></a> &raquo;</li>
+        
+          <li><a href="modules.html">wendy</a> &raquo;</li>
+        
+          <li><a href="wendy.html">wendy package</a> &raquo;</li>
+        
+      <li>wendy.models package</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+          
+            <a href="_sources/wendy.models.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="wendy-models-package">
+<h1>wendy.models package<a class="headerlink" href="#wendy-models-package" title="このヘッドラインへのパーマリンク">¶</a></h1>
+<div class="section" id="subpackages">
+<h2>Subpackages<a class="headerlink" href="#subpackages" title="このヘッドラインへのパーマリンク">¶</a></h2>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="wendy.models.seeds.html">wendy.models.seeds package</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="wendy.models.seeds.html#submodules">Submodules</a></li>
+<li class="toctree-l2"><a class="reference internal" href="wendy.models.seeds.html#module-wendy.models.seeds.address">wendy.models.seeds.address module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="wendy.models.seeds.html#module-wendy.models.seeds.building">wendy.models.seeds.building module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="wendy.models.seeds.html#module-wendy.models.seeds.chair">wendy.models.seeds.chair module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="wendy.models.seeds.html#module-wendy.models.seeds.room">wendy.models.seeds.room module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="wendy.models.seeds.html#module-wendy.models.seeds.table">wendy.models.seeds.table module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="wendy.models.seeds.html#module-wendy.models.seeds">Module contents</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="wendy.models.validators.html">wendy.models.validators package</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="wendy.models.validators.html#submodules">Submodules</a></li>
+<li class="toctree-l2"><a class="reference internal" href="wendy.models.validators.html#module-wendy.models.validators.chair_name">wendy.models.validators.chair_name module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="wendy.models.validators.html#module-wendy.models.validators.table_name">wendy.models.validators.table_name module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="wendy.models.validators.html#module-wendy.models.validators">Module contents</a></li>
+</ul>
+</li>
+</ul>
+</div>
+</div>
+<div class="section" id="submodules">
+<h2>Submodules<a class="headerlink" href="#submodules" title="このヘッドラインへのパーマリンク">¶</a></h2>
+</div>
+<div class="section" id="module-wendy.models.chair">
+<span id="wendy-models-chair-module"></span><h2>wendy.models.chair module<a class="headerlink" href="#module-wendy.models.chair" title="このヘッドラインへのパーマリンク">¶</a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="wendy.models.chair.Chair">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">wendy.models.chair.</span></span><span class="sig-name descname"><span class="pre">Chair</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Any</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#wendy.models.chair.Chair" title="この定義へのパーマリンク">¶</a></dt>
+<dd><p>ベースクラス: <code class="xref py py-class docutils literal notranslate"><span class="pre">tortoise.models.Model</span></code></p>
+<dl class="py class">
+<dt class="sig sig-object py" id="wendy.models.chair.Chair.Meta">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">Meta</span></span><a class="headerlink" href="#wendy.models.chair.Chair.Meta" title="この定義へのパーマリンク">¶</a></dt>
+<dd><p>ベースクラス: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="wendy.models.chair.Chair.Meta.table">
+<span class="sig-name descname"><span class="pre">table</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'chairs'</span></em><a class="headerlink" href="#wendy.models.chair.Chair.Meta.table" title="この定義へのパーマリンク">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="wendy.models.chair.Chair.Meta.unique_together">
+<span class="sig-name descname"><span class="pre">unique_together</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">()</span></em><a class="headerlink" href="#wendy.models.chair.Chair.Meta.unique_together" title="この定義へのパーマリンク">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-wendy.models.core">
+<span id="wendy-models-core-module"></span><h2>wendy.models.core module<a class="headerlink" href="#module-wendy.models.core" title="このヘッドラインへのパーマリンク">¶</a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="wendy.models.core.Address">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">wendy.models.core.</span></span><span class="sig-name descname"><span class="pre">Address</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Any</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#wendy.models.core.Address" title="この定義へのパーマリンク">¶</a></dt>
+<dd><p>ベースクラス: <code class="xref py py-class docutils literal notranslate"><span class="pre">tortoise.models.Model</span></code></p>
+<dl class="py class">
+<dt class="sig sig-object py" id="wendy.models.core.Address.Meta">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">Meta</span></span><a class="headerlink" href="#wendy.models.core.Address.Meta" title="この定義へのパーマリンク">¶</a></dt>
+<dd><p>ベースクラス: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="wendy.models.core.Address.Meta.table">
+<span class="sig-name descname"><span class="pre">table</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'addresses'</span></em><a class="headerlink" href="#wendy.models.core.Address.Meta.table" title="この定義へのパーマリンク">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="wendy.models.core.Address.Meta.unique_together">
+<span class="sig-name descname"><span class="pre">unique_together</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">(('longtitude',</span> <span class="pre">'latitude'),</span> <span class="pre">('country_code',</span> <span class="pre">'post_code',</span> <span class="pre">'address_1',</span> <span class="pre">'address_2'))</span></em><a class="headerlink" href="#wendy.models.core.Address.Meta.unique_together" title="この定義へのパーマリンク">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="wendy.models.core.Building">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">wendy.models.core.</span></span><span class="sig-name descname"><span class="pre">Building</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Any</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#wendy.models.core.Building" title="この定義へのパーマリンク">¶</a></dt>
+<dd><p>ベースクラス: <code class="xref py py-class docutils literal notranslate"><span class="pre">tortoise.models.Model</span></code></p>
+<dl class="py class">
+<dt class="sig sig-object py" id="wendy.models.core.Building.Meta">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">Meta</span></span><a class="headerlink" href="#wendy.models.core.Building.Meta" title="この定義へのパーマリンク">¶</a></dt>
+<dd><p>ベースクラス: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="wendy.models.core.Building.Meta.indexes">
+<span class="sig-name descname"><span class="pre">indexes</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">('name',)</span></em><a class="headerlink" href="#wendy.models.core.Building.Meta.indexes" title="この定義へのパーマリンク">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="wendy.models.core.Building.Meta.table">
+<span class="sig-name descname"><span class="pre">table</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'buildings'</span></em><a class="headerlink" href="#wendy.models.core.Building.Meta.table" title="この定義へのパーマリンク">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="wendy.models.core.Room">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">wendy.models.core.</span></span><span class="sig-name descname"><span class="pre">Room</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Any</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#wendy.models.core.Room" title="この定義へのパーマリンク">¶</a></dt>
+<dd><p>ベースクラス: <code class="xref py py-class docutils literal notranslate"><span class="pre">tortoise.models.Model</span></code></p>
+<dl class="py class">
+<dt class="sig sig-object py" id="wendy.models.core.Room.Meta">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">Meta</span></span><a class="headerlink" href="#wendy.models.core.Room.Meta" title="この定義へのパーマリンク">¶</a></dt>
+<dd><p>ベースクラス: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="wendy.models.core.Room.Meta.table">
+<span class="sig-name descname"><span class="pre">table</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'rooms'</span></em><a class="headerlink" href="#wendy.models.core.Room.Meta.table" title="この定義へのパーマリンク">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-wendy.models.table">
+<span id="wendy-models-table-module"></span><h2>wendy.models.table module<a class="headerlink" href="#module-wendy.models.table" title="このヘッドラインへのパーマリンク">¶</a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="wendy.models.table.Table">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">wendy.models.table.</span></span><span class="sig-name descname"><span class="pre">Table</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Any</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#wendy.models.table.Table" title="この定義へのパーマリンク">¶</a></dt>
+<dd><p>ベースクラス: <code class="xref py py-class docutils literal notranslate"><span class="pre">tortoise.models.Model</span></code></p>
+<dl class="py class">
+<dt class="sig sig-object py" id="wendy.models.table.Table.Meta">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">Meta</span></span><a class="headerlink" href="#wendy.models.table.Table.Meta" title="この定義へのパーマリンク">¶</a></dt>
+<dd><p>ベースクラス: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="wendy.models.table.Table.Meta.table">
+<span class="sig-name descname"><span class="pre">table</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'tables'</span></em><a class="headerlink" href="#wendy.models.table.Table.Meta.table" title="この定義へのパーマリンク">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="wendy.models.table.Table.Meta.unique_together">
+<span class="sig-name descname"><span class="pre">unique_together</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">()</span></em><a class="headerlink" href="#wendy.models.table.Table.Meta.unique_together" title="この定義へのパーマリンク">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-wendy.models">
+<span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-wendy.models" title="このヘッドラインへのパーマリンク">¶</a></h2>
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+        <a href="wendy.models.seeds.html" class="btn btn-neutral float-right" title="wendy.models.seeds package" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+        <a href="wendy.controllers.html" class="btn btn-neutral float-left" title="wendy.controllers package" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &#169; Copyright 2021, Tuan Nguyen-Anh.
+
+    </p>
+  </div>
+    
+    
+    
+    Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    
+    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>
