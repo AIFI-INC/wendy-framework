@@ -152,7 +152,7 @@ jobs:
         with:
           github-token: ${{ github.token }} # this will use the runner's token.
           ms-teams-webhook-uri: ${{ secrets.MS_TEAM_HOOK_URL }}
-          notification-summary: "Finished integration of commit ${{ github.sha }} which will is wanted to integrate to develop"
+          notification-summary: "Finished integration of commit ${{ github.sha }} which is wanted to integrate to develop"
           timezone: Asia/Tokyo
           notification-color: 486ee8
   notify-teams-staging:
@@ -165,7 +165,7 @@ jobs:
         with:
           github-token: ${{ github.token }} # this will use the runner's token.
           ms-teams-webhook-uri: ${{ secrets.MS_TEAM_HOOK_URL }}
-          notification-summary: "Finished integration of commit ${{ github.sha }} which will is wanted to integrate to staging"
+          notification-summary: "Finished integration of commit ${{ github.sha }} which is wanted to integrate to staging"
           timezone: Asia/Tokyo
           notification-color: 486ee8
   notify-teams-production:
@@ -178,6 +178,6 @@ jobs:
         with:
           github-token: ${{ github.token }} # this will use the runner's token.
           ms-teams-webhook-uri: ${{ secrets.MS_TEAM_HOOK_URL }}
-          notification-summary: "Finished integration of commit ${{ github.sha }} which will is wanted to integrate to main"
+          notification-summary: "Finished integration of commit ${{ github.sha }} which is wanted to integrate to main"
           timezone: Asia/Tokyo
           notification-color: 486ee8

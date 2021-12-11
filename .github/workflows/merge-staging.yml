@@ -1,0 +1,29 @@
+name: Release branching when merging into staging
+
+on:
+  push:
+    branches:
+      - feature/** # for testing
+      - staging
+    inputs:
+      release_version:
+        description: The version number
+        required: true
+
+jobs:
+  create-release-branch:
+    name: Auto-create a release branch
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: true
+    steps:
+      - name: Print the version number
+        run: |
+          echo ${{ github.event.inputs.release_version }}
+
+      - name: Create branch
+        uses: peterjgrainger/action-create-branch@v2.0.1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          branch: release/${{ github.event.inputs.release_version }}
