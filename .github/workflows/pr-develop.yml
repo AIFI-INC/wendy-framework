@@ -145,7 +145,7 @@ jobs:
   notify-teams:
     name: Notify M$ Teams channels
     runs-on: ubuntu-latest
-    needs: [pr-develop]
+    needs: [pr-develop,pr-staging,pr-main]
     steps:
       - name: Notify M$ Teams
         uses: jdcargile/ms-teams-notification@v1.3
