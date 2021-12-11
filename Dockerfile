@@ -11,4 +11,4 @@ RUN pip3 install -r requirements.txt
 ENV PYTHONPATH=/src
 
 EXPOSE 8000
-CMD ["uvicorn", "sample:app", "--reload", "--workers=4", "--host=0.0.0.0"]
+CMD ["uvicorn", "sample:app", "--reload", "--workers=4", "--host=0.0.0.0", "--port=8000"]

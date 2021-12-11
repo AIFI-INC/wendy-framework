@@ -7,4 +7,5 @@ ENV_FILE = find_dotenv(filename='.env')
 if ENV_FILE:
     load_dotenv(ENV_FILE)
 else:
-    raise FileNotFoundError(ENV_FILE)
+    # raise FileNotFoundError(ENV_FILE)
+    print('.env is not found')
