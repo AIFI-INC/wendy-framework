@@ -5,10 +5,6 @@ on:
     branches:
       - feature/** # for testing
       - staging
-    inputs:
-      release_version:
-        description: The version number
-        required: true
 
 jobs:
   create-release-branch:
@@ -25,5 +21,3 @@ jobs:
         uses: peterjgrainger/action-create-branch@v2.0.1
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        with:
-          branch: release/${{ github.event.inputs.release_version }}
