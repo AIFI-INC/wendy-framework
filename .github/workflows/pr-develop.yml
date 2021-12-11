@@ -40,6 +40,9 @@ jobs:
       - name: Run MySQL container
         run: |
           docker run --rm -itd -e MYSQL_ALLOW_EMPTY_PASSWORD=yes -e MYSQL_USER=root -p 3306:3306 mysql:5.7
+      - name: Install dependencies
+        run: |
+          pip3 install -r requirements.txt
       - name: Run tests
         run: |
           echo "testing"
