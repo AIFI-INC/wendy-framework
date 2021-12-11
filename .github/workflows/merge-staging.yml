@@ -2,9 +2,6 @@ name: Release branching when merging into staging
 
 on:
   workflow_dispatch:
-    branches:
-      - feature/** # for testing
-      - staging
     inputs:
       release_version:
         description: The version number
