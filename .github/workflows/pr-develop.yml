@@ -49,7 +49,9 @@ jobs:
           echo "MYSQL_URL=mysql://root@localhost:3306/wendy" >> .env
       - name: Run tests
         run: |
-          echo "testing"
+          export PYTHONPATH=`pwd`
+          echo "integration testing ..."
+          pytest -v --full-trace --cache-clear
 
   pr-develop:
     name: Automatically create/update PR
