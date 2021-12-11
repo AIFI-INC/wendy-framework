@@ -67,12 +67,20 @@ jobs:
           timezone: Asia/Tokyo
           notification-color: e3241a
 
+      # Rules for using environments:
+      # DEVELOP: only start when confirmation needed and must be DELETED after 
+      # confirmation to avoid additional charges ($).
+      # after merging a carefully linted/tested PR into develop, this process begins.
+      # STAGING: the same as DEVELOP. After confirmation in DEVELOP finish, 
+      # the approver will merge into staging and then this process is started.
+      # PRODUCTION: Run continuously even when there is no confirmation.
+      # DEVELOP/STAGING must be deleted after review processes finished!
       - name: Notify M$ Teams
         uses: jdcargile/ms-teams-notification@v1.3
         with:
-          github-token: ${{ github.token }} # this will use the runner's token.
+          github-token: ${{ github.token }}
           ms-teams-webhook-uri: ${{ secrets.MS_TEAM_HOOK_URL }}
-          notification-summary: "Updated docker container with ${{ steps.docker_build.outputs.digest }}"
+          notification-summary: "Updated docker container with ${{ steps.docker_build.outputs.digest }}. We need you to approve this content by starting a develop environment in Azure. Due to Azure need login using username and password, for security reason create environments manually and delete after confirming."
           timezone: Asia/Tokyo
           notification-color: 486ee8
   
@@ -84,42 +92,23 @@ jobs:
     strategy:
       fail-fast: true
     steps:
-      - name: Setup Azure CLI
+      - name: Echo
         run: |
-          apt update
-          apt install -y ca-certificates curl apt-transport-https lsb-release gnupg
-          curl -sL https://packages.microsoft.com/keys/microsoft.asc | gpg --dearmor | tee /etc/apt/trusted.gpg.d/microsoft.gpg > /dev/null
-          export AZ_REPO=$(lsb_release -cs)
-          echo "deb [arch=amd64] https://packages.microsoft.com/repos/azure-cli/ $AZ_REPO main" | tee /etc/apt/sources.list.d/azure-cli.list
-          apt update
-          apt install -y azure-cli
-          az group -h
-      - name: Checkout Repo
-        uses: actions/checkout@v2.4.0
-      - name: Provision the Resource Group in Azure (including WebApps, MySql, ServicePlan)
-        timeout-minutes: 5
-        run: |
-          az group delete -g ${{ secrets.DEV_RG }}
-          az group create -g ${{ secrets.DEV_RG }} -l eastus
-          az deployment group create --resource-group ${{ secrets.DEV_RG }} --template-file templates/arm/develop.json --parameters "{\"siteName\": \"${{ secrets.DEV_SITENAME }}\", \"imageName\": \"${{secrets.DEV_IMAGENAME }}\", \"administratorLogin\": \"${{ secrets.DEV_MYSQL_USERNAME }}\", \"administratorLoginPassword\": \"${{ secrets.DEV_MYSQL_PASSWORD }}\"}"
-      - name: Notify M$ Teams
-        if: ${{ failure() }}
-        uses: jdcargile/ms-teams-notification@v1.3
-        with:
-          github-token: ${{ github.token }}
-          ms-teams-webhook-uri: ${{ secrets.MS_TEAM_HOOK_URL }}
-          notification-summary: "Couldn't provision develop environment for commit ${{ github.sha }}."
-          timezone: Asia/Tokyo
-          notification-color: e3241a
+          echo "Thank you for helping us reviewing this work. Plz use `cmd/start_env.sh` to start a develop environment."
+          echo "And DON'T forget to delete the environment after reviewing using `cmd/stop_env.sh`"
       - name: Notify M$ Teams
         uses: jdcargile/ms-teams-notification@v1.3
         with:
           github-token: ${{ github.token }}
           ms-teams-webhook-uri: ${{ secrets.MS_TEAM_HOOK_URL }}
-          notification-summary: "Provisioned develop environment for commit ${{ github.sha }}. DON'T forget to delete this environment after you approve the work to avoid additional charges."
+          notification-summary: "Someone agreed to review this work and to provision a develop environment for commit ${{ github.sha }}. DON'T forget to delete this environment after you approve the work to avoid additional charges."
           timezone: Asia/Tokyo
           notification-color: 486ee8
 
+  # Rules:
+  # The company starts at 8AM, and DEV/STAGING environments will be started after that time.
+  # The company stop at 5PM, and all provisioned DEV/STAGING environments must be stopped to avoid additional charges.
+  # No OT, and if an message is sent to M$ Teams befor or after 8AM-5PM of working days, a serious situation is raised!
   rollback-azure:
     name: Delete the provisioned environment to avoid additional charges
     strategy:
@@ -128,34 +117,17 @@ jobs:
     needs: [deploy-to-azure]
     environment: develop
     steps:
-      - name: Setup Azure CLI
+      - name: Echo
         run: |
-          apt update
-          apt install -y ca-certificates curl apt-transport-https lsb-release gnupg
-          curl -sL https://packages.microsoft.com/keys/microsoft.asc | gpg --dearmor | tee /etc/apt/trusted.gpg.d/microsoft.gpg > /dev/null
-          export AZ_REPO=$(lsb_release -cs)
-          echo "deb [arch=amd64] https://packages.microsoft.com/repos/azure-cli/ $AZ_REPO main" | tee /etc/apt/sources.list.d/azure-cli.list
-          apt update
-          apt install -y azure-cli
-          az group -h
-      - name: Rollback
-        run: |
-          az group delete -g ${{ secrets.DEV_RG }}
-      - name: Notify M$ Teams
-        if: ${{ failure() }}
-        uses: jdcargile/ms-teams-notification@v1.3
-        with:
-          github-token: ${{ github.token }}
-          ms-teams-webhook-uri: ${{ secrets.MS_TEAM_HOOK_URL }}
-          notification-summary: "Couldn't auto-delete develop environment for commit ${{ github.sha }}. Please delete it manually."
-          timezone: Asia/Tokyo
-          notification-color: e3241a
+          echo "Thank you for your reviews."
+          echo "Please DON'T forget to delete the develop environment using `cmd/stop_env.sh`."
+          echo "Also, plz reports your feedbacks to the authors."
       - name: Notify M$ Teams
         uses: jdcargile/ms-teams-notification@v1.3
         with:
           github-token: ${{ github.token }}
           ms-teams-webhook-uri: ${{ secrets.MS_TEAM_HOOK_URL }}
-          notification-summary: "Provisioned develop environment for commit ${{ github.sha }} has been DELETED. DON'T forget to let the authors know your feedback!"
+          notification-summary: "Someone finished a review for commit ${{ github.sha }}, the provisioned environment should be DELETED. DON'T forget to let the authors know your feedback!"
           timezone: Asia/Tokyo
           notification-color: 486ee8
 
