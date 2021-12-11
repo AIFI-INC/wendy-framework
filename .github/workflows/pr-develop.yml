@@ -27,7 +27,7 @@ jobs:
           flake8 . --ignore E501,F401,F403,F405,F811,E402,F821,F841
     
   pr-develop:
-    name: Automatically create/update PR
+    name: Automatically create/update PR to develop for feature/bugix
     runs-on: ubuntu-latest
     needs: [lint]
     if: startsWith(github.ref, 'refs/heads/feature/') || startsWith(github.ref, 'refs/heads/bugfix/')
@@ -39,6 +39,52 @@ jobs:
         source_branch: ""                                 # If blank, default: triggered branch
         destination_branch: "develop"                      # If blank, default: master
         pr_title: "Pulling ${{ github.ref }} into develop" # Title of pull request
+        # pr_body: ":crown: *An automated PR*"              # Full markdown support, requires pr_title to be set
+        pr_template: ".github/PULL_REQUEST_TEMPLATE.md"   # Path to pull request template, requires pr_title to be set, excludes pr_body
+        pr_reviewer: "wanted2"                         # Comma-separated list (no spaces)
+        pr_assignee: "wanted2"                         # Comma-separated list (no spaces)
+        pr_label: "auto-pr,merge"                               # Comma-separated list (no spaces)
+        # pr_milestone: "Milestone 1"                       # Milestone name
+        pr_draft: false                                    # Creates pull request as draft
+        pr_allow_empty: false                              # Creates pull request even if there are no changes
+        github_token: ${{ secrets.GITHUB_TOKEN }}
+
+  pr-staging:
+    name: Automatically create/update PR to staging for hotfix
+    runs-on: ubuntu-latest
+    needs: [lint]
+    if: startsWith(github.ref, 'refs/heads/hotfix/')
+    steps:
+    - uses: actions/checkout@v2.4.0
+    - name: pull-request
+      uses: repo-sync/pull-request@v2.6
+      with:
+        source_branch: ""                                 # If blank, default: triggered branch
+        destination_branch: "staging"                      # If blank, default: master
+        pr_title: "Pulling ${{ github.ref }} into staging" # Title of pull request
+        # pr_body: ":crown: *An automated PR*"              # Full markdown support, requires pr_title to be set
+        pr_template: ".github/PULL_REQUEST_TEMPLATE.md"   # Path to pull request template, requires pr_title to be set, excludes pr_body
+        pr_reviewer: "wanted2"                         # Comma-separated list (no spaces)
+        pr_assignee: "wanted2"                         # Comma-separated list (no spaces)
+        pr_label: "auto-pr,merge"                               # Comma-separated list (no spaces)
+        # pr_milestone: "Milestone 1"                       # Milestone name
+        pr_draft: false                                    # Creates pull request as draft
+        pr_allow_empty: false                              # Creates pull request even if there are no changes
+        github_token: ${{ secrets.GITHUB_TOKEN }}
+  
+  pr-main:
+    name: Automatically create/update PR to main for release
+    runs-on: ubuntu-latest
+    needs: [lint]
+    if: startsWith(github.ref, 'refs/heads/release/')
+    steps:
+    - uses: actions/checkout@v2.4.0
+    - name: pull-request
+      uses: repo-sync/pull-request@v2.6
+      with:
+        source_branch: ""                                 # If blank, default: triggered branch
+        destination_branch: "main"                      # If blank, default: master
+        pr_title: "Pulling ${{ github.ref }} into release" # Title of pull request
         # pr_body: ":crown: *An automated PR*"              # Full markdown support, requires pr_title to be set
         pr_template: ".github/PULL_REQUEST_TEMPLATE.md"   # Path to pull request template, requires pr_title to be set, excludes pr_body
         pr_reviewer: "wanted2"                         # Comma-separated list (no spaces)
