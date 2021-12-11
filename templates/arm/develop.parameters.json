@@ -1,0 +1,39 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentParameters.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "siteName": {
+            "value": "wendydjhurg"
+        },
+        "imageName": {
+            "value": "wanted2/wendy"
+        },
+        "administratorLogin": {
+            "value": "wendy"
+        },
+        "administratorLoginPassword": {
+            "value": ""
+        },
+        "databaseSkucapacity": {
+            "value": 2
+        },
+        "databaseSkuFamily": {
+            "value": "Gen5"
+        },
+        "databaseSkuName": {
+            "value": "GP_Gen5_2"
+        },
+        "databaseSkuSizeMB": {
+            "value": 51200
+        },
+        "databaseSkuTier": {
+            "value": "GeneralPurpose"
+        },
+        "location": {
+            "value": "useast"
+        },
+        "mySqlVersion": {
+            "value": "5.7"
+        }
+    }
+}
