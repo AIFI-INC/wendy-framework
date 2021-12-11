@@ -7,8 +7,13 @@ REM Command file for Sphinx documentation
 if "%SPHINXBUILD%" == "" (
 	set SPHINXBUILD=sphinx-build
 )
+if "%SPHINXAPIDOC%" == "" (
+	set SPHINXAPIDOC=sphinx-apidoc
+)
 set SOURCEDIR=source
-set BUILDDIR=build
+set BUILDDIR=..\docs
+set WENDYDIR=..\wendy
+set PYTHONPATH=..
 
 if "%1" == "" goto help
 
@@ -25,11 +30,21 @@ if errorlevel 9009 (
 	exit /b 1
 )
 
+%SPHINXAPIDOC% >NUL 2>NUL
+if errorlevel 9009 (
+	echo.
+	echo.The 'sphinx-apidoc' command was not found.
+)
+
+%SPHINXAPIDOC% -f -o %SOURCEDIR% %WENDYDIR%
 %SPHINXBUILD% -M %1 %SOURCEDIR% %BUILDDIR% %SPHINXOPTS% %O%
+move %BUILDDIR%\html\* %BUILDDIR%\
 goto end
 
 :help
+%SPHINXAPIDOC% -f -o %SOURCEDIR% %WENDYDIR%
 %SPHINXBUILD% -M help %SOURCEDIR% %BUILDDIR% %SPHINXOPTS% %O%
+move %BUILDDIR%\html\* %BUILDDIR%\
 
 :end
 popd

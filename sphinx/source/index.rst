@@ -7,13 +7,11 @@
 ==================================================
 
 .. toctree::
-   :maxdepth: 5
+   :maxdepth: 3
    :caption: 目次
 
    command
+   modules
 
-
-* :ref:`genindex`
-* :ref:`modindex`
 * :ref:`search`
 
