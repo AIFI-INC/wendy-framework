@@ -1,0 +1,25 @@
+version: '3.1'
+
+services:
+  database:
+    image: mysql:5.7
+    restart: always
+    environment:
+      - MYSQL_DATABASE=wendy
+      - MYSQL_ALLOW_EMPTY_PASSWORD=yes
+    
+  app:
+    build: .
+    restart: always
+    environment:
+      - MYSQL_URL=mysql://root@database:3306/wendy
+    depends_on:
+      - database
+    ports:
+      - 8000:8000
+    command:
+      - bash
+      - -c
+      - |
+        python3 cmd/wendy migrate:up
+        uvicorn sample:app --workers=4 --reload --host=0.0.0.0 --port=8000
