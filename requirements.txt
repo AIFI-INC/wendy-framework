@@ -7,3 +7,4 @@ uvicorn
 inflect
 iPython[all]
 Faker
+pytest
