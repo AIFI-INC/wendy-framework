@@ -262,4 +262,4 @@ elif args.action.lower() == 'seed':
     print("Seeding done!")
 
 elif args.action.lower() == "run":
-    run("sample:app", host=args.host, port=args.port, workers=1, log_level="debug")
+    run("sample:app", host=args.host, port=args.port, workers=1, log_level="debug", reload=False)
