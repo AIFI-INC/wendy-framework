@@ -3,7 +3,7 @@
     "contentVersion": "1.0.0.0",
     "parameters": {
         "siteName": {
-            "value": "wendydjhurg"
+            "value": "wendy-aifi-staging"
         },
         "imageName": {
             "value": "wanted2/wendy"
@@ -31,6 +31,9 @@
         },
         "mySqlVersion": {
             "value": "5.7"
+        },
+        "openCensusConnString": {
+            "value": "InstrumentationKey=<your-instrumentation_key-here>"
         }
     }
 }

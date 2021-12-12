@@ -45,5 +45,9 @@ def getLogger(name: str, custom_dimensions: dict = dict()) -> logging.Logger:
     default_properties.update(custom_dimensions)
     filter = OpenCensusDimensionsFilter(custom_dimensions=default_properties)
     handler.addFilter(filter=filter)
+    formatter = logging.Formatter(
+        fmt="%(asctime)s loglevel=%(levelname)-6s logger=%(name)s %(funcName)s() L%(lineno)-4d %(message)s   call_trace=%(pathname)s L%(lineno)-4d")
+    handler.setFormatter(formatter)
+    handler.setLevel(logging.DEBUG)
     log.addHandler(handler)
     return log
