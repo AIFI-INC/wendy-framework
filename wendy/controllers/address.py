@@ -7,10 +7,8 @@ from wendy.utilities import MSG_200_OK, MSG_500_ERROR, messages
 from config import init_db, close_db
 from tortoise.transactions import in_transaction
 from pydantic import BaseModel
-import logging
-from logging import config
-config.fileConfig('config/logging.conf', disable_existing_loggers=False)
-LOG = logging.getLogger(__file__)
+from config import *
+LOG = getLogger(__file__)
 router = APIRouter()
 
 
