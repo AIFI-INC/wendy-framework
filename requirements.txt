@@ -1,0 +1,14 @@
+fastapi
+tortoise-orm[accel,asyncmy]
+aerich
+fastapi-auth0
+python-dotenv
+uvicorn
+inflect
+iPython[all]
+Faker
+pytest
+sphinx
+sphinx_rtd_theme
+opencensus
+opencensus-ext-azure

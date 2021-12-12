@@ -1,0 +1,183 @@
+name: Auto-PR
+
+on:
+  push:
+    branches:
+      - feature/**
+      - bugfix/**
+      - hotfix/**
+      - release/**
+
+jobs:
+  lint:
+    name: Run flake8 in commits
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: true
+      matrix:
+        python-version: ['3.8', '3.9']
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2.4.0
+      - name: Install dependencies
+        run: |
+          pip install flake8
+      - name: Linting
+        run: |
+          flake8 . --ignore E501,F401,F403,F405,F811,E402,F821,F841
+      - name: Notify M$ Teams
+        if: ${{ failure() }}
+        uses: jdcargile/ms-teams-notification@v1.3
+        with:
+          github-token: ${{ github.token }} # this will use the runner's token.
+          ms-teams-webhook-uri: ${{ secrets.MS_TEAM_HOOK_URL }}
+          notification-summary: "Linting failed for commit ${{ github.sha }}"
+          timezone: Asia/Tokyo
+          notification-color: e3241a
+
+  testing:
+    name: Testing the wendy package
+    runs-on: ubuntu-latest
+    needs: [lint]
+    strategy:
+      fail-fast: true
+      matrix:
+        python-version: ['3.8', '3.9']
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2.4.0
+      - name: Run MySQL container
+        run: |
+          docker run --rm -itd -e MYSQL_ALLOW_EMPTY_PASSWORD=yes -e MYSQL_DATABASE=wendy -p 3306:3306 mysql:5.7
+      - name: Install dependencies
+        run: |
+          pip3 install -r requirements.txt
+      - name: Create .env file
+        run: |
+          touch .env
+          echo "MYSQL_URL=mysql://root@localhost:3306/wendy" >> .env
+      - name: Database migration
+        run: |
+          python cmd/wendy migrate:up
+      - name: Run tests
+        run: |
+          export PYTHONPATH=`pwd`
+          echo "integration testing ..."
+          pytest -v --full-trace --cache-clear
+      - name: Notify M$ Teams
+        if: ${{ failure() }}
+        uses: jdcargile/ms-teams-notification@v1.3
+        with:
+          github-token: ${{ github.token }} # this will use the runner's token.
+          ms-teams-webhook-uri: ${{ secrets.MS_TEAM_HOOK_URL }}
+          notification-summary: "Integration tests failed for commit ${{ github.sha }}"
+          timezone: Asia/Tokyo
+          notification-color: e3241a
+
+  pr-develop:
+    name: Automatically create/update PR to develop for feature/bugix
+    runs-on: ubuntu-latest
+    if: startsWith(github.ref, 'refs/heads/feature/') || startsWith(github.ref, 'refs/heads/bugfix/')
+    needs: [testing]
+    steps:
+    - uses: actions/checkout@v2.4.0
+    - name: pull-request
+      uses: repo-sync/pull-request@v2.6
+      with:
+        source_branch: ""                                 # If blank, default: triggered branch
+        destination_branch: "develop"                      # If blank, default: master
+        pr_title: "Pulling ${{ github.ref }} into develop" # Title of pull request
+        # pr_body: ":crown: *An automated PR*"              # Full markdown support, requires pr_title to be set
+        pr_template: ".github/PULL_REQUEST_TEMPLATE.md"   # Path to pull request template, requires pr_title to be set, excludes pr_body
+        pr_reviewer: "wanted2"                         # Comma-separated list (no spaces)
+        pr_assignee: "wanted2"                         # Comma-separated list (no spaces)
+        pr_label: "auto-pr,merge"                               # Comma-separated list (no spaces)
+        # pr_milestone: "Milestone 1"                       # Milestone name
+        pr_draft: false                                    # Creates pull request as draft
+        pr_allow_empty: false                              # Creates pull request even if there are no changes
+        github_token: ${{ secrets.GITHUB_TOKEN }}
+
+  pr-staging:
+    name: Automatically create/update PR to staging for hotfix
+    runs-on: ubuntu-latest
+    needs: [testing]
+    if: startsWith(github.ref, 'refs/heads/hotfix/')
+    steps:
+    - uses: actions/checkout@v2.4.0
+    - name: pull-request
+      uses: repo-sync/pull-request@v2.6
+      with:
+        source_branch: ""                                 # If blank, default: triggered branch
+        destination_branch: "staging"                      # If blank, default: master
+        pr_title: "Pulling ${{ github.ref }} into staging" # Title of pull request
+        # pr_body: ":crown: *An automated PR*"              # Full markdown support, requires pr_title to be set
+        pr_template: ".github/PULL_REQUEST_TEMPLATE.md"   # Path to pull request template, requires pr_title to be set, excludes pr_body
+        pr_reviewer: "wanted2"                         # Comma-separated list (no spaces)
+        pr_assignee: "wanted2"                         # Comma-separated list (no spaces)
+        pr_label: "auto-pr,merge"                               # Comma-separated list (no spaces)
+        # pr_milestone: "Milestone 1"                       # Milestone name
+        pr_draft: false                                    # Creates pull request as draft
+        pr_allow_empty: false                              # Creates pull request even if there are no changes
+        github_token: ${{ secrets.GITHUB_TOKEN }}
+  
+  pr-main:
+    name: Automatically create/update PR to main for release
+    runs-on: ubuntu-latest
+    needs: [testing]
+    if: startsWith(github.ref, 'refs/heads/release/')
+    steps:
+    - uses: actions/checkout@v2.4.0
+    - name: pull-request
+      uses: repo-sync/pull-request@v2.6
+      with:
+        source_branch: ""                                 # If blank, default: triggered branch
+        destination_branch: "main"                      # If blank, default: master
+        pr_title: "Pulling ${{ github.ref }} into release" # Title of pull request
+        # pr_body: ":crown: *An automated PR*"              # Full markdown support, requires pr_title to be set
+        pr_template: ".github/PULL_REQUEST_TEMPLATE.md"   # Path to pull request template, requires pr_title to be set, excludes pr_body
+        pr_reviewer: "wanted2"                         # Comma-separated list (no spaces)
+        pr_assignee: "wanted2"                         # Comma-separated list (no spaces)
+        pr_label: "auto-pr,merge"                               # Comma-separated list (no spaces)
+        # pr_milestone: "Milestone 1"                       # Milestone name
+        pr_draft: false                                    # Creates pull request as draft
+        pr_allow_empty: false                              # Creates pull request even if there are no changes
+        github_token: ${{ secrets.GITHUB_TOKEN }}
+  notify-teams-develop:
+    name: Notify M$ Teams channels
+    runs-on: ubuntu-latest
+    needs: [pr-develop]
+    steps:
+      - name: Notify M$ Teams
+        uses: jdcargile/ms-teams-notification@v1.3
+        with:
+          github-token: ${{ github.token }} # this will use the runner's token.
+          ms-teams-webhook-uri: ${{ secrets.MS_TEAM_HOOK_URL }}
+          notification-summary: "Finished integration of commit ${{ github.sha }} which is wanted to integrate to develop"
+          timezone: Asia/Tokyo
+          notification-color: 486ee8
+  notify-teams-staging:
+    name: Notify M$ Teams channels
+    runs-on: ubuntu-latest
+    needs: [pr-staging]
+    steps:
+      - name: Notify M$ Teams
+        uses: jdcargile/ms-teams-notification@v1.3
+        with:
+          github-token: ${{ github.token }} # this will use the runner's token.
+          ms-teams-webhook-uri: ${{ secrets.MS_TEAM_HOOK_URL }}
+          notification-summary: "Finished integration of commit ${{ github.sha }} which is wanted to integrate to staging"
+          timezone: Asia/Tokyo
+          notification-color: 486ee8
+  notify-teams-production:
+    name: Notify M$ Teams channels
+    runs-on: ubuntu-latest
+    needs: [pr-main]
+    steps:
+      - name: Notify M$ Teams
+        uses: jdcargile/ms-teams-notification@v1.3
+        with:
+          github-token: ${{ github.token }} # this will use the runner's token.
+          ms-teams-webhook-uri: ${{ secrets.MS_TEAM_HOOK_URL }}
+          notification-summary: "Finished integration of commit ${{ github.sha }} which is wanted to integrate to main"
+          timezone: Asia/Tokyo
+          notification-color: 486ee8
