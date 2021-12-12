@@ -8,3 +8,7 @@ inflect
 iPython[all]
 Faker
 pytest
+sphinx
+sphinx_rtd_theme
+opencensus
+opencensus-ext-azure
