@@ -107,6 +107,13 @@
             "metadata": {
                 "description": "Azure database for MySQL sku family"
             }
+        },
+        "openCensusConnString": {
+            "type": "string",
+            "maxLength": 255,
+            "metadata": {
+                "description": "See https://github.com/census-instrumentation/opencensus-python/tree/master/contrib/opencensus-ext-azure for more detail"
+            }
         }
     },
     "functions": [],
@@ -156,6 +163,14 @@
                                 ':', parameters('administratorLoginPassword'), 
                                 '@', parameters('siteName'),
                                 '-server.mysql.database.azure.com:3306/', parameters('siteName'), '-database')]"
+                        },
+                        {
+                            "name": "APP_NAME",
+                            "value": "[parameters('siteName')]"
+                        },
+                        {
+                            "name": "OPENCENSUS_CONN",
+                            "value": "[parameters('openCensusConnString')]"
                         }
                     ]
                 }
